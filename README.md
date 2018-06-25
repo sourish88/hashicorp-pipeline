@@ -15,4 +15,4 @@ This uses `alpine:latest` as the base, and then add in packer & terraform, using
 ## test/experiment
 
 
-    docker run -it --rm jenkins201/hashicorp-ci:latest /bin/ash
+    docker run -it --rm simonmcc/hashicorp-pipeline:latest /bin/ash
