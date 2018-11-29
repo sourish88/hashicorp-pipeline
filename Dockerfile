@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --update git bash wget openssl groff less python py-pip jq perl openssh
+RUN apk add --update git bash wget openssl groff less python py-pip jq perl openssh make
 RUN pip install --quiet awscli
 
 # https://github.com/hashicorp/docker-hub-images/blob/master/packer/Dockerfile-light
