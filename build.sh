@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 THIS_SCRIPT=${BASH_SOURCE[0]:-$0}
 if [[ -L "${THIS_SCRIPT}" ]]; then
