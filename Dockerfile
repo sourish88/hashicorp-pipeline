@@ -6,12 +6,14 @@ RUN pip install --quiet awscli
 
 # https://hub.docker.com/r/azuresdk/azure-cli-python/~/dockerfile/
 ENV JP_VERSION="0.1.3"
-RUN apk add --no-cache bash openssh ca-certificates jq curl openssl git \
- && apk add --no-cache --virtual .build-deps gcc make openssl-dev libffi-dev musl-dev \
+ENV AZURE_CLI_VERSION="2.0.52"
+RUN apk add --no-cache bash openssh ca-certificates curl openssl \
+ && apk add --no-cache --virtual .build-deps gcc make openssl-dev libffi-dev musl-dev python-dev \
  && curl https://github.com/jmespath/jp/releases/download/${JP_VERSION}/jp-linux-amd64 -o /usr/local/bin/jp \
  && chmod +x /usr/local/bin/jp \
- && pip install --no-cache-dir --upgrade jmespath-terminal
-RUN pip install azure-cli
+ && pip install --no-cache-dir --upgrade jmespath-terminal \
+ && pip install azure-cli==${AZURE_CLI_VERSION} \
+ && apk del .build-deps
 
 # https://github.com/hashicorp/docker-hub-images/blob/master/packer/Dockerfile-light
 ENV PACKER_VERSION=1.2.4
