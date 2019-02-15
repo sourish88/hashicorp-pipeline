@@ -40,7 +40,7 @@ GIT_DIRTY=$([[ -z $(git status -s) ]] || echo '-DIRTY')
 IMAGE_TAG=$(echo ${GIT_BRANCH}${GIT_DIRTY} | tr  :/ -)
 IMAGE_NAME="${GITHUB_ORG}/${GITHUB_PROJECT}"
 
-docker build -f Dockerfile -t ${GITHUB_ORG}/${GITHUB_PROJECT} .
+docker build -f Dockerfile -t ${GITHUB_ORG}/${GITHUB_PROJECT}:${IMAGE_TAG} .
 
 if [ "${IMAGE_TAG}" == 'master' ]; then
   docker tag "${IMAGE_NAME}:${IMAGE_TAG}" "${IMAGE_NAME}:latest"
