@@ -1,4 +1,4 @@
-# hashicorp-ci
+# hashicorp-pipeline
 
 container with packer & terraform for hashicorp based CI/CD pipeline usage
 
