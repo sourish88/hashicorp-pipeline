@@ -27,18 +27,30 @@ RUN sha256sum -cs packer_${PACKER_VERSION}_SHA256SUMS
 RUN unzip packer_${PACKER_VERSION}_linux_amd64.zip -d /bin
 RUN rm -f packer_${PACKER_VERSION}_linux_amd64.zip
 
-# https://github.com/hashicorp/docker-hub-images/blob/master/terraform/Dockerfile-light
-# https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_SHA256SUMS
-ENV TERRAFORM_VERSION=0.11.11
-ENV TERRAFORM_SHA256SUM=94504f4a67bad612b5c8e3a4b7ce6ca2772b3c1559630dfd71e9c519e3d6149c
+# This is the Hashicorp public key: https://www.hashicorp.com/security
+# https://github.com/hashicorp/terraform/blob/master/scripts/docker-release/releases_public_key
+COPY releases_public_key .
 
-ADD https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip ./
-ADD https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS ./
+# What's going on here?
+# - Download the indicated release along with its checksums and signature for the checksums
+# - Verify that the checksums file is signed by the Hashicorp releases key
+# - Verify that the zip file matches the expected checksum
+# - Extract the zip file so it can be run
+#
+# https://github.com/hashicorp/terraform/blob/master/scripts/docker-release/Dockerfile-release
 
-RUN echo "${TERRAFORM_SHA256SUM}  terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > terraform_${TERRAFORM_VERSION}_SHA256SUMS
-RUN sha256sum -cs terraform_${TERRAFORM_VERSION}_SHA256SUMS
-RUN unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /bin
-RUN rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+ENV TERRAFORM_VERSION=0.11.13
+RUN echo Building image for Terraform ${TERRAFORM_VERSION} && \
+    apk add --update git curl openssh gnupg && \
+    curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip > terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig > terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig && \
+    curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS > terraform_${TERRAFORM_VERSION}_SHA256SUMS && \
+    gpg --import releases_public_key && \
+    gpg --verify terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig terraform_${TERRAFORM_VERSION}_SHA256SUMS && \
+    grep linux_amd64 terraform_${TERRAFORM_VERSION}_SHA256SUMS >terraform_${TERRAFORM_VERSION}_SHA256SUMS_linux_amd64 && \
+    sha256sum -cs terraform_${TERRAFORM_VERSION}_SHA256SUMS_linux_amd64 && \
+    unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /bin && \
+    rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip terraform_${TERRAFORM_VERSION}_SHA256SUMS*
 
 # irrelevant
 CMD ["/bin/ash"]
