@@ -1,12 +1,14 @@
 # hashicorp-pipeline
 
-container with packer & terraform for hashicorp based CI/CD pipeline usage
+container with tools for use in a hashicorp based CI/CD pipeline
 
-This uses `alpine:latest` as the base, and then add in packer & terraform, using the same technique Hashicorp build there own packer & terraform containers:
+* awscli from pip
+* azure-cli from pip (pinned to 2.0.52)
+* jq, perl & python from apk
 
-* [Packer Docker-light](https://github.com/hashicorp/docker-hub-images/blob/master/packer/Dockerfile-light)
-* [Terraform Docker-light](https://github.com/hashicorp/docker-hub-images/blob/master/terraform/Dockerfile-light)
+This uses `alpine:latest` as the base, and then adds in packer & terraform, validating the SHASUM etc where possible.
 
+This repo should trigger an automatic build on docker hub: [https://cloud.docker.com/repository/docker/simonmcc/hashicorp-pipeline](https://cloud.docker.com/repository/docker/simonmcc/hashicorp-pipeline)
 
 ## build
 
