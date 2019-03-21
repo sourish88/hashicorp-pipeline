@@ -16,8 +16,8 @@ RUN apk add --no-cache bash openssh ca-certificates curl openssl \
  && apk del .build-deps
 
 # https://github.com/hashicorp/docker-hub-images/blob/master/packer/Dockerfile-light
-ENV PACKER_VERSION=1.3.4
-ENV PACKER_SHA256SUM=73074f4fa07fe15b5d65a694ee7afae2d1a64f0287e6b40897adee77a7afc552
+ENV PACKER_VERSION=1.3.5
+ENV PACKER_SHA256SUM=14922d2bca532ad6ee8e936d5ad0788eba96f773bcdcde8c2dc7c95f830841ec
 
 ADD https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip ./
 ADD https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_SHA256SUMS ./
