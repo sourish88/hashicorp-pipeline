@@ -39,7 +39,7 @@ COPY releases_public_key .
 #
 # https://github.com/hashicorp/terraform/blob/master/scripts/docker-release/Dockerfile-release
 
-ENV TERRAFORM_VERSION=0.11.13
+ENV TERRAFORM_VERSION=0.11.14
 RUN echo Building image for Terraform ${TERRAFORM_VERSION} && \
     apk add --update git curl openssh gnupg && \
     curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip > terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
