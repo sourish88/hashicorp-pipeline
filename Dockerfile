@@ -1,22 +1,21 @@
 FROM alpine:latest
 
-RUN apk add --update git bash wget openssl groff less python py-pip jq perl openssh make
+RUN apk add --update git bash wget openssl groff less py-pip jq python3 perl openssh make
 RUN pip install --upgrade pip
 RUN pip install --quiet awscli
 
 # https://hub.docker.com/r/azuresdk/azure-cli-python/~/dockerfile/
 ENV JP_VERSION="0.1.3"
-ENV AZURE_CLI_VERSION="2.0.52"
+ENV AZURE_CLI_VERSION="2.19.1"
 RUN apk add --no-cache bash openssh ca-certificates curl openssl \
- && apk add --no-cache --virtual .build-deps gcc make openssl-dev libffi-dev musl-dev python-dev \
+ && apk add --no-cache --virtual .build-deps gcc make openssl-dev libffi-dev musl-dev python3 \
  && curl https://github.com/jmespath/jp/releases/download/${JP_VERSION}/jp-linux-amd64 -o /usr/local/bin/jp \
  && chmod +x /usr/local/bin/jp \
  && pip install --no-cache-dir --upgrade jmespath-terminal \
- && pip install azure-cli==${AZURE_CLI_VERSION} \
  && apk del .build-deps
 
 # https://github.com/hashicorp/docker-hub-images/blob/master/packer/Dockerfile-light
-ENV PACKER_VERSION=1.3.5
+ENV PACKER_VERSION=1.7.0
 ENV PACKER_SHA256SUM=14922d2bca532ad6ee8e936d5ad0788eba96f773bcdcde8c2dc7c95f830841ec
 
 ADD https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip ./
@@ -39,7 +38,7 @@ COPY releases_public_key .
 #
 # https://github.com/hashicorp/terraform/blob/master/scripts/docker-release/Dockerfile-release
 
-ENV TERRAFORM_VERSION=0.11.14
+ENV TERRAFORM_VERSION=0.13.5
 RUN echo Building image for Terraform ${TERRAFORM_VERSION} && \
     apk add --update git curl openssh gnupg && \
     curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip > terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
